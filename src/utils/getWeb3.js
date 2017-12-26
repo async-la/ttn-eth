@@ -1,4 +1,4 @@
-import Web3 from 'web3'
+const Web3 = require('web3')
 
 let getWeb3 = new Promise(function(resolve, reject) {
   // Wait for loading completion to avoid race conditions with web3 injection timing.
@@ -21,7 +21,7 @@ let getWeb3 = new Promise(function(resolve, reject) {
     } else {
       // Fallback to localhost if no web3 injection. We've configured this to
       // use the development console's port by default.
-      var provider = new Web3.providers.HttpProvider('http://127.0.0.1:9545')
+      var provider = new Web3.providers.HttpProvider('http://127.0.0.1:8545')
 
       web3 = new Web3(provider)
 
@@ -36,4 +36,4 @@ let getWeb3 = new Promise(function(resolve, reject) {
   })
 })
 
-export default getWeb3
+module.exports = getWeb3

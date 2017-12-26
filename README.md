@@ -1,70 +1,68 @@
-# React Truffle Box
+# React Truffle TTN Application Demo
 
-This box comes with everything you need to start using smart contracts from a react app. This is as barebones as it gets, so nothing stands in your way.
-
-## Installation
+## Configuration
 
 1. Install Truffle globally.
-    ```javascript
+    ```bash
     npm install -g truffle
     ```
 
-2. Download the box. This also takes care of installing the necessary dependencies.
-    ```javascript
-    truffle unbox react
+2. Clone repository
+    ```bash
+    git clone https://github.com/async-la/ttn-eth
+    cd ttn-eth
+    ```
+3. Set Data directory
+    ```bash
+    DATADIR=/path/to/mydataDir
     ```
 
-3. Run the development console.
-    ```javascript
-    truffle develop
+3. Create an account
+    ```bash
+    geth --datadir $DATADIR account new
+    ```
+    NOTE: Replace <ACCOUNT_ADDRESS> in genesis.json with the address of your newly created account.
+
+4. Create Genesis Block
+    ```bash
+    geth --datadir $DATADIR init ./genesis.json
     ```
 
-4. Compile and migrate the smart contracts. Note inside the development console we don't preface commands with `truffle`.
-    ```javascript
-    compile
-    migrate
+5. Start Geth in console mode with RPC - NOTE: --rpccorsdomain is a wildcard for DEMO purposes only
+    ```bash
+    geth --datadir $DATADIR --rpc --rpccorsdomain '*' console
+    ```
+    In the development console, unlock your wallet and start mining
+    ```bash
+    > personal.unlockAccount(eth.coinbase)
+    > miner.start()
     ```
 
-5. Run the webpack server for front-end hot reloading (outside the development console). Smart contract changes must be manually recompiled and migrated.
-    ```javascript
-    // Serves the front-end on http://localhost:3000
-    npm run start
+5. Start Swarm
+    ```bash
+    swarm --bzzaccount <WALLET_ADDRESS> --datadir $DATADIR --ens-api '' -corsdomain '*'   
+    ```
+    In the development console, unlock your wallet and start mining
+    ```bash
+    > personal.unlockAccount(eth.coinbase)
+    > miner.start()
     ```
 
-6. Truffle can run tests written in Solidity or JavaScript against your smart contracts. Note the command varies slightly if you're in or outside of the development console.
-    ```javascript
-    // If inside the development console.
-    test
 
-    // If outside the development console..
-    truffle test
+5. In a new terminal window, compile and migrate the smart contracts.
+    ```javascript
+    truffle compile
+    truffle migrate
     ```
 
-7. Jest is included for testing React components. Compile your contracts before running Jest, or you may receive some file not found errors.
-    ```javascript
-    // Run Jest outside of the development console for front-end component tests.
-    npm run test
+6. Start backend service
+    ```bash
+    node server.js
     ```
+    NOTE: Updated app-id and key in server.js to match your TTN application
 
-8. To build the application for production, use the build command. A production build will be in the build_webpack folder.
-    ```javascript
-    npm run build
+
+6. Start front end app
+    ```bash
+    npm start
     ```
-
-## FAQ
-
-* __How do I use this with the EthereumJS TestRPC?__
-
-    It's as easy as modifying the config file! [Check out our documentation on adding network configurations](http://truffleframework.com/docs/advanced/configuration#networks). Depending on the port you're using, you'll also need to update line 24 of `src/utils/getWeb3.js`.
-
-* __Why is there both a truffle.js file and a truffle-config.js file?__
-
-    `truffle-config.js` is a copy of `truffle.js` for compatibility with Windows development environments. Feel free to it if it's irrelevant to your platform.
-
-* __Where is my production build?__
-
-    The production build will be in the build_webpack folder. This is because Truffle outputs contract compilations to the build folder.
-
-* __Where can I find more documentation?__
-
-    This box is a marriage of [Truffle](http://truffleframework.com/) and a React setup created with [create-react-app](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md). Either one would be a great place to start!
